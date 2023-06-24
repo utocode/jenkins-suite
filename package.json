@@ -1,0 +1,728 @@
+{
+  "name": "jenkinssuite",
+  "displayName": "Jenkins Suite",
+  "description": "",
+  "version": "0.0.1",
+  "author": "utocode",
+  "publisher": "utocode",
+  "icon": "images/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:utocode/jenkins-suite.git"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Extension Packs",
+    "Other"
+  ],
+  "keywords": [
+    "jenkins",
+    "jenkins dashboard",
+    "devops",
+    "management"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": true
+  },
+  "activationEvents": [],
+  "extensionDependencies": [],
+  "files": [
+    "out/",
+    "l10n/",
+    "media/",
+    "images/",
+    "snippets/",
+    "syntaxes/",
+    "languages/",
+    "resources/"
+  ],
+  "main": "./out/extension.js",
+  "l10n": "./l10n",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "jenkins-explorer",
+          "title": "%jenkins-explorer.title%",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "jenkins-explorer": [
+        {
+          "id": "utocode.views.connection",
+          "name": "%views.connection.title%"
+        },
+        {
+          "id": "utocode.views.views",
+          "name": "%views.views.title%"
+        },
+        {
+          "id": "utocode.views.jobs",
+          "name": "%views.jobs.title%"
+        },
+        {
+          "id": "utocode.views.builds",
+          "name": "%views.builds.title%"
+        },
+        {
+          "id": "utocode.views.notify",
+          "name": "%views.notify.title%",
+          "visibility": "collapsed",
+          "when": "config.jenkinssuite.views.notify.enabled"
+        },
+        {
+          "id": "utocode.views.snippets",
+          "name": "%views.snippets.title%",
+          "visibility": "collapsed",
+          "when": "config.jenkinssuite.views.snippet.enabled"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "utocode.switchConnection",
+        "title": "%switchConnection.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.switchView",
+        "title": "%switchView.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.switchJob",
+        "title": "%switchJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.runJob",
+        "title": "%runJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.runFolderJob",
+        "title": "%runFolderJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.createView",
+        "title": "%createView.title%",
+        "icon": {
+          "dark": "resources/dark/add.png",
+          "light": "resources/light/add.png"
+        },
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.createFolder",
+        "title": "%createFolder.title%",
+        "icon": {
+          "light": "resources/light/add.svg",
+          "dark": "resources/dark/add.svg"
+        },
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.generateJobCode",
+        "title": "%generateJobCode.title%",
+        "icon": {
+          "dark": "resources/dark/gen-code.svg",
+          "light": "resources/light/gen-code.svg"
+        },
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.getConfigView",
+        "title": "%getConfigView.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.updateConfigView",
+        "title": "%updateConfigView.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.getConfigJob",
+        "title": "%getConfigJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.createJob",
+        "title": "%createJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.updateConfigJob",
+        "title": "%updateConfigJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.buildJob",
+        "title": "%buildJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.openExternalBrowser",
+        "title": "%openExternalBrowser.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.getJobLog",
+        "title": "%getJobLog.title%",
+        "icon": {
+          "dark": "resources/dark/console.svg",
+          "light": "resources/light/console.svg"
+        },
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.getJobLogPick",
+        "title": "%getJobLogPick.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.withJobLog",
+        "title": "%withJobLog.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.getJobHistory",
+        "title": "%getJobHistory.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.withJobHistory",
+        "title": "%withJobHistory.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.validateJenkins",
+        "title": "%validateJenkins.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.setPrimaryServer",
+        "title": "%setPrimaryServer.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.connectServer",
+        "title": "%connectServer.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.disconnectServer",
+        "title": "%disconnectServer.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.connections.refresh",
+        "title": "%connections.refresh.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "utocode.createView",
+        "title": "%createView.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/add.svg",
+          "dark": "resources/dark/add.svg"
+        }
+      },
+      {
+        "command": "utocode.views.refresh",
+        "title": "%views.refresh.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "utocode.jobs.refresh",
+        "title": "%jobs.refresh.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "utocode.snippets.refresh",
+        "title": "%snippets.refresh.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "utocode.generateCode",
+        "title": "%generateCode.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.translateMessage",
+        "title": "Translate Message",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.welcome",
+        "title": "%welcome.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.helloWorld",
+        "title": "Hello World",
+        "category": "jenkinssuite"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "utocode.helloWorld",
+          "when": "true"
+        }
+      ],
+      "view/item/context": [
+        {
+          "when": "viewItem == 'connection'",
+          "command": "utocode.setPrimaryServer",
+          "group": "1_jenkinssuite_actions@1"
+        },
+        {
+          "when": "viewItem == 'connection'",
+          "command": "utocode.connectServer",
+          "group": "1_jenkinssuite_actions@1"
+        },
+        {
+          "when": "viewItem == 'connection'",
+          "command": "utocode.disconnectServer",
+          "group": "1_jenkinssuite_actions@1"
+        },
+        {
+          "when": "viewItem == 'views'",
+          "command": "utocode.getConfigView",
+          "group": "1_jenkinssuite_actions@2"
+        },
+        {
+          "when": "viewItem == 'jobs'",
+          "command": "utocode.getConfigJob",
+          "group": "1_jenkinssuite_actions@3"
+        },
+        {
+          "when": "viewItem == 'jobs'",
+          "command": "utocode.buildJob",
+          "group": "1_jenkinssuite_actions@3"
+        },
+        {
+          "when": "viewItem == 'jobs'",
+          "command": "utocode.openExternalBrowser",
+          "group": "1_jenkinssuite_actions@3"
+        },
+        {
+          "when": "viewItem == 'builds'",
+          "command": "utocode.getJobLog",
+          "group": "inline"
+        },
+        {
+          "when": "viewItem == 'builds'",
+          "command": "utocode.withJobLog",
+          "group": "1_jenkinssuite_actions@4"
+        },
+        {
+          "when": "viewItem == 'notify'",
+          "command": "utocode.getJobHistory",
+          "group": "1_jenkinssuite_actions@5"
+        },
+        {
+          "when": "viewItem == 'notify'",
+          "command": "utocode.withJobHistory",
+          "group": "1_jenkinssuite_actions@5"
+        },
+        {
+          "when": "viewItem == 'snippet'",
+          "command": "utocode.generateCode",
+          "group": "1_jenkinssuite_actions@6"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "utocode.connections.refresh",
+          "when": "view == utocode.views.connection",
+          "group": "navigation@1"
+        },
+        {
+          "command": "utocode.createView",
+          "when": "view == utocode.views.views",
+          "group": "navigation@1"
+        },
+        {
+          "command": "utocode.views.refresh",
+          "when": "view == utocode.views.views",
+          "group": "navigation@1"
+        },
+        {
+          "command": "utocode.generateJobCode",
+          "when": "view == utocode.views.jobs",
+          "group": "navigation@1"
+        },
+        {
+          "command": "utocode.createFolder",
+          "when": "view == utocode.views.jobs",
+          "group": "navigation@2"
+        },
+        {
+          "command": "utocode.jobs.refresh",
+          "when": "view == utocode.views.jobs",
+          "group": "navigation@3"
+        },
+        {
+          "command": "utocode.snippets.refresh",
+          "when": "view == utocode.views.snippets",
+          "group": "navigation@1"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Jenkins Suite",
+      "properties": {
+        "jenkinssuite.views.notify.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "%views.notify.enabled.description%"
+        },
+        "jenkinssuite.views.snippet.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "%views.snippet.enabled.description%"
+        },
+        "jenkinssuite.server.primary": {
+          "type": "string",
+          "default": "",
+          "description": "%server.primary.description%"
+        },
+        "jenkinssuite.plugin.jobdsl.enabled": {
+          "type": "boolean",
+          "default": "false",
+          "description": "%plugin.jobdsl.enabled.description%"
+        },
+        "jenkinssuite.plugin.categorized.enabled": {
+          "type": "boolean",
+          "default": "false",
+          "description": "%plugin.categorized.enabled.description%"
+        },
+        "jenkinssuite.snippet.create-view": {
+          "type": "string",
+          "default": "c_view_cateview",
+          "description": "%snippet.create-view.description%"
+        },
+        "jenkinssuite.snippet.create-folder": {
+          "type": "string",
+          "default": "c_folder",
+          "description": "%snippet.create-folder.description%"
+        },
+        "jenkinssuite.build.delay": {
+          "type": "number",
+          "default": 3,
+          "description": "%build.delay.description%"
+        },
+        "jenkinssuite.limit.builds": {
+          "type": "number",
+          "default": "20",
+          "enum": [
+            "10",
+            "20",
+            "30",
+            "50"
+          ],
+          "enumDescriptions": [
+            "Max 10",
+            "Max 20",
+            "Max 30",
+            "Max 50"
+          ],
+          "description": "%limit.builds.description%"
+        },
+        "jenkinssuite.limit.history": {
+          "type": "number",
+          "default": "15",
+          "enum": [
+            "15",
+            "30",
+            "50"
+          ],
+          "enumDescriptions": [
+            "Max 15",
+            "Max 30",
+            "Max 50"
+          ],
+          "description": "%limit.history.description%"
+        },
+        "jenkinssuite.servers": {
+          "type": "object",
+          "description": "%property.servers.description%",
+          "patternProperties": {
+            ".+": {
+              "type": "object",
+              "required": [
+                "url",
+                "username",
+                "token"
+              ],
+              "properties": {
+                "url": {
+                  "description": "URL to Jenkins host. Required",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Description of the Jenkins Server. Required",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "username to Jenkins host. Required",
+                  "type": "string"
+                },
+                "token": {
+                  "description": "Token to Jenkins host. Required",
+                  "type": "string"
+                },
+                "wstalk.enabled": {
+                  "description": "Wstalk Plugin Installed",
+                  "type": "boolean"
+                },
+                "wstalk.url": {
+                  "description": "Wstalk URL to Jenkins host",
+                  "type": "string"
+                },
+                "wstalk.description": {
+                  "description": "Wstalk to Jenkins Wstalk host",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "local": {
+              "url": "http://localhost:8080/jenkins",
+              "description": "Local Server",
+              "username": "admin",
+              "token": "11ea22ed67653028d29170f000930e36ca",
+              "wstalk": {
+                "enabled": false,
+                "url": "ws://localhost:9090/jenkins",
+                "description": "Local WsTalk Server"
+              }
+            },
+            "test": {
+              "url": "http://localhost:8080/jenkins",
+              "description": "Test Server",
+              "username": "admin",
+              "token": "11af48629290dc6ba56111fce6e88b6868",
+              "wstalk": {
+                "enabled": false,
+                "url": "ws://localhost:9090/jenkins",
+                "description": "Test WsTalk Server"
+              }
+            }
+          }
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "utocode.jenkins-explorer",
+        "title": "Jenkins Suite",
+        "description": "%walkthroughs.description%",
+        "steps": [
+          {
+            "id": "utocode.jenkins",
+            "title": "%walkthroughs.step1.title%",
+            "description": "%walkthroughs.step1.description%",
+            "media": {
+              "image": "media/image1.png",
+              "altText": "Empty image"
+            },
+            "completionEvents": [
+              "onCommand:utocode.jenkins"
+            ]
+          },
+          {
+            "id": "utocode.switchConnection",
+            "title": "%walkthroughs.step2.title%",
+            "description": "%walkthroughs.step2.description%",
+            "media": {
+              "image": "media/image2.png",
+              "altText": "Empty image"
+            },
+            "completionEvents": [
+              "onCommand:openSettings"
+            ]
+          },
+          {
+            "id": "utocode.runSwitchView",
+            "title": "%walkthroughs.step3.title%",
+            "description": "%walkthroughs.step3.description%",
+            "media": {
+              "image": "media/image3.png",
+              "altText": "Empty image"
+            },
+            "completionEvents": [
+              "onCommand:utocode.jenkins-explorer"
+            ]
+          }
+        ]
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "workbench.view.extension.jenkins-explorer",
+        "key": "alt+f8",
+        "mac": "cmd+f8"
+      },
+      {
+        "command": "utocode.withView",
+        "key": "ctrl+k f3",
+        "mac": "cmd+k f3"
+      },
+      {
+        "command": "utocode.withJob",
+        "key": "ctrl+k f4",
+        "mac": "cmd+k f4"
+      },
+      {
+        "command": "utocode.switchConnection",
+        "key": "alt+1",
+        "mac": "option+1"
+      },
+      {
+        "command": "utocode.switchView",
+        "key": "alt+2",
+        "mac": "option+2"
+      },
+      {
+        "command": "utocode.switchJob",
+        "key": "alt+3",
+        "mac": "option+3"
+      },
+      {
+        "command": "utocode.runJob",
+        "key": "alt+4",
+        "mac": "option+4"
+      },
+      {
+        "command": "utocode.runFolderJob",
+        "key": "alt+6",
+        "mac": "option+6"
+      },
+      {
+        "command": "utocode.switchBuild",
+        "key": "alt+5",
+        "mac": "option+5"
+      },
+      {
+        "command": "utocode.validateJenkins",
+        "key": "ctrl+alt+t",
+        "mac": "cmd+option+t"
+      },
+      {
+        "command": "utocode.showJobs",
+        "title": "Show Jobs",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.showBuilds",
+        "title": "Show Builds",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.showHistory",
+        "title": "Show History",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.generateJobCode",
+        "key": "ctrl+alt+insert",
+        "mac": "cmd+options+f12",
+        "when": "editorTextFocus",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.withJob",
+        "key": "shift+alt+enter",
+        "mac": "shift+options+enter",
+        "when": "editorTextFocus",
+        "category": "jenkinssuite"
+      }
+    ],
+    "languages": [
+      {
+        "id": "jenkins",
+        "extensions": [
+          ".groovy",
+          "Jenkinsfile.groovy",
+          "Jenkinsfile",
+          "jenkinsfile",
+          ".jdp"
+        ],
+        "aliases": [
+          "Jenkins"
+        ],
+        "configuration": "./languages/jenkins-language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "jenkins",
+        "scopeName": "source.jenkins",
+        "path": "./syntaxes/jenkins.tmGrammar.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/lodash": "^4.14.195",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@types/ws": "^8.5.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "@vscode/l10n-dev": "^0.0.26",
+    "@vscode/test-electron": "^2.3.0",
+    "eslint": "^8.39.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "@vscode/l10n": "^0.0.14",
+    "ajv": "^8.12.0",
+    "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.8",
+    "formdata-node": "^5.0.1",
+    "html-entities": "^2.3.6",
+    "lodash": "^4.17.21",
+    "ws": "^8.13.0",
+    "xml-js": "^1.6.11"
+  }
+}

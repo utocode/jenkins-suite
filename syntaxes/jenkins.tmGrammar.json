@@ -1,0 +1,79 @@
+{
+  "scopeName": "source.jenkins",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "fileTypes": ["groovy"],
+  "name": "Jenkins",
+  "patterns": [
+    { "include": "#keywords" },
+    { "include": "#doubleQuoteStrings" },
+    { "include": "#singleQuoteStrings" },
+    { "include": "#sections" },
+    { "include": "#directives" },
+    { "include": "#constants" },
+    { "include": "#comments" }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.jenkins",
+          "match": "\\b(when|steps)\\b"
+        }
+      ]
+    },
+    "singleQuoteStrings": {
+      "name": "string.quoted.single.jenkins",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.jenkins",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "doubleQuoteStrings": {
+      "name": "string.quoted.double.jenkins",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.fusion",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "sections": {
+      "patterns": [
+        {
+          "name": "support.class.jenkins",
+          "match": "\\b(post|stages|step)\\b"
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "support.function.jenkins",
+          "match": "\\b(agent|environment|options|parameters|triggers|stage|tools)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "variable.language.jenkins",
+          "match": "\\b(pipeline)\\b"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.jenkins",
+          "match": "(//).*$\n?"
+        }
+      ]
+    }
+  }
+}
