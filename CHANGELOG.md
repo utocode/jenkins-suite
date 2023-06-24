@@ -1,5 +1,7 @@
 # Change Log
 
-## [Unreleased]
+## [0.0.2] - 2023-06-24
+- Remove unnecessary libraries
 
-- Initial release
+## [0.0.1] - 2023-06-24
+- Initial Release

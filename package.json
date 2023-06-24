@@ -8,9 +8,9 @@
   "icon": "images/logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/utocode/jenkins-suite.git"
+    "url": "https://github.com/utocode/jenkins-suite"
   },
-  "license": "GNU GENERAL PUBLIC LICENSE Version 2",
+  "license": "GNU General Public License v2.0",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -518,7 +518,7 @@
               "url": "http://localhost:8080/jenkins",
               "description": "Local Server",
               "username": "admin",
-              "token": "11ea22ed67653028d29170f000930e36ca",
+              "token": "",
               "wstalk": {
                 "enabled": false,
                 "url": "ws://localhost:9090/jenkins",
@@ -529,7 +529,7 @@
               "url": "http://localhost:8080/jenkins",
               "description": "Test Server",
               "username": "admin",
-              "token": "11af48629290dc6ba56111fce6e88b6868",
+              "token": "",
               "wstalk": {
                 "enabled": false,
                 "url": "ws://localhost:9090/jenkins",
