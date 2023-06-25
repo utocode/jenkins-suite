@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.4] - 2023-06-25
+- A few bug fixes
+
 ## [0.0.3] - 2023-06-25
 - Add Deleting Job and Folder
 
