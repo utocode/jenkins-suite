@@ -165,7 +165,6 @@ export class Executor {
     }
 
     async buildJobWithParameter(job: JobsModel, delay: number = 3): Promise<string> {
-        const data: any = {};
         let flag: boolean = true;
         const jobParams = getParameterDefinition(job.jobDetail ?? undefined);
         const uri = this.extractUrl(job.url);
@@ -175,27 +174,28 @@ export class Executor {
             delay = 99;
         }
 
+        const formData = new FormData();
         if (jobParams && jobParams.length > 0) {
             for (let param of jobParams[0].parameterDefinitions) {
                 await vscode.window.showInputBox({
-                    prompt: 'Enter "' + param.description ?? '' + '"' ,
+                    prompt: 'Enter "' + param.description ?? '' + '"',
                     value: param.defaultParameterValue.value
                 }).then((val) => {
                     if (val) {
-                        data[param.name] = val;
+                        formData.append(param.name, val);
                     } else {
                         flag = false;
                     }
                 });
-                if (!flag) {break;}
+                if (!flag) { break; }
             }
             if (!flag) {
                 return 'Cancelled by user';
             }
 
-            console.log(`data <${data}>`);
-            return await this._jenkins._post<string>(
-                `${uri}/buildWithParameters?delay=${delay}sec`, data
+            console.log(formData);
+            return await this._jenkins._postForm<string>(
+                `${uri}/buildWithParameters?delay=${delay}sec`, formData
             );
         } else {
             return await this._jenkins._post<string>(

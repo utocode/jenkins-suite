@@ -10,7 +10,7 @@ Jenkins Extension for Visual Studio Code
 * Install Jenkins Plugins [Recommend]
   * JobDSL: <https://plugins.jenkins.io/job-dsl/>
   * CategorizedView: <https://plugins.jenkins.io/categorized-view/>
-  * WsTalk: Communicate build information from the server via websockets [Working to publish]
+  * WsTalk: Communicate build information from the jenkins server via websockets [Working to publish]
     * Download: <https://github.com/utocode/wstalk/releases/>
 * Make User of the Jenkins (Account & API Token)
 

@@ -239,13 +239,13 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         if (text) {
             const mesg = await this.executor?.createJob(text, viewName);
             console.log(`result <${mesg}>`);
+
+            setTimeout(() => {
+                this.refresh();
+            }, 2500);
         } else {
             showInfoMessageWithTimeout(vscode.l10n.t('There is no xml data to create a job'));
         }
-
-        setTimeout(() => {
-            this.refresh();
-        }, 2500);
     }
 
     async getTreeItem(element: JobsModel): Promise<vscode.TreeItem> {
