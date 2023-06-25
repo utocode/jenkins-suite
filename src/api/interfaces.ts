@@ -7,15 +7,16 @@ import {
 } from 'axios';
 
 
-type JenkinsAxiosResponse<T = any> = {
-    response?: T
-};
+// type JenkinsAxiosResponse<T = any> = {
+//     response?: T
+// };
 
 export interface JenkinsAxiosInterface extends AxiosInstance {
 
     interceptors: {
         request: AxiosInterceptorManager<InternalAxiosRequestConfig>
-        response: AxiosInterceptorManager<AxiosResponse<JenkinsAxiosResponse>>
+        // response: AxiosInterceptorManager<AxiosResponse<JenkinsAxiosResponse>>
+        response: AxiosInterceptorManager<AxiosResponse>
     }
 
     get<T>(url: string, config?: AxiosRequestConfig): Promise<T>

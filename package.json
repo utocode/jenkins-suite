@@ -2,7 +2,7 @@
   "name": "jenkinssuite",
   "displayName": "Jenkins Suite",
   "description": "Manage your Jenkins Job inside Visual Studio Code",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "utocode",
   "publisher": "utocode",
   "icon": "images/logo.png",
@@ -168,6 +168,11 @@
         "category": "jenkinssuite"
       },
       {
+        "command": "utocode.deleteJob",
+        "title": "%deleteJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
         "command": "utocode.openExternalBrowser",
         "title": "%openExternalBrowser.title%",
         "category": "jenkinssuite"
@@ -323,6 +328,11 @@
         {
           "when": "viewItem == 'jobs'",
           "command": "utocode.buildJob",
+          "group": "1_jenkinssuite_actions@3"
+        },
+        {
+          "when": "viewItem == 'jobs'",
+          "command": "utocode.deleteJob",
           "group": "1_jenkinssuite_actions@3"
         },
         {
@@ -671,10 +681,8 @@
         "id": "jenkins",
         "extensions": [
           ".groovy",
-          "Jenkinsfile.groovy",
-          "Jenkinsfile",
-          "jenkinsfile",
-          ".jdp"
+          ".jenkins",
+          "Jenkinsfile"
         ],
         "aliases": [
           "Jenkins"

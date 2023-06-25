@@ -6,13 +6,10 @@ import { NotifyProvider } from './sidebar/notify-provider';
 import { SnippetProvider } from './sidebar/snippet-provider';
 import { ViewsProvider } from './sidebar/views-provider';
 import { showInfoMessageWithTimeout } from './ui/ui';
-import { getMessageL10n, translateMessage } from './utils/vsc';
 import { vscExtension } from './vsc-ns';
 
 export async function activate(context: vscode.ExtensionContext) {
 	vscExtension.context = context;
-	const title = getMessageL10n('Hello');
-	console.log(`title <${title}>`);
 
 	const buildsProvider = new BuildsProvider(context);
 	const jobsProvider = new JobsProvider(context, buildsProvider);
@@ -30,15 +27,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider("utocode.views.connection", connectionProvider);
 
 	context.subscriptions.push(
-		// vscode.window.createTreeView('utocode.views.snippetsView', { treeDataProvider: snippetProvider }),
-		// vscode.commands.registerCommand('utocode.views.snippets.toggleTreeView', () => {
-		// 	snippetProvider.toggleVisibility();
-		// }),
 		vscode.commands.registerCommand('utocode.helloWorld', async () => {
-			// const hello = translateMessage('Bye');
-			// console.log(hello);
-
-			showInfoMessageWithTimeout('Hello, Jenkins Suite!');
+			showInfoMessageWithTimeout(vscode.l10n.t('Hello, Jenkins Suite'));
 			await connectionProvider.executeCommand('checkJobName', 'test11');
 		}),
 		vscode.commands.registerCommand("utocode.welcome", () => {

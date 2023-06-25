@@ -1,10 +1,20 @@
 {
+  "Hello, Jenkins Suite": "Hello, Jenkins Suite!",
+  "Jenkins is not connected": "Jenkins is not connected",
+  "Server is not connected": "Server is not connected",
   "Server is not exists": "Server is not exists",
+  "View is not exists": "View is not exists",
+  "Disconnected Server <{0}>": "Disconnected Server",
   "Select to switch server": "Select to switch server",
   "Select to switch view": "Select to switch view",
   "Select to run view": "Select to run view",
   "Select to run command": "Select to run command",
   "Select to generate Job Code": "Select to generate Job Code",
   "Select to switch only job": "Select to switch only job",
-  "Select to view Job Log": "Select to view Job Log"
+  "Select to view Job Log": "Select to view Job Log",
+  "Jobs is not exists": "Jobs is not exists",
+  "There is no xml data to create a job": "There is no xml data to create a job",
+  "Job Data is not exist": "Job Data is not exist",
+  "Jenkinsfile successfully validated": "Jenkinsfile successfully validated",
+  "If you want to modify the xml data and apply it to the server, run \"Create Job\"or \"Update Config Job\" (Shift + Alt + Enter)": "If you want to modify the xml data and apply it to the server, run \"Create Job\" or \"Update Config Job\" (Shift + Alt + Enter)"
 }

@@ -1,6 +1,20 @@
 {
-  "Bye": "안녕3~",
-  "Hello": "안녕하세요3",
-  "Hello {0}": "안녕하세요3 {0}",
-  "Hello {done}": "안녕하세요3 {done}"
+  "Hello, Jenkins Suite": "Hello, Jenkins Suite!",
+  "Jenkins is not connected": "Jenkins 서버가 연결되지 않았습니다",
+  "Server is not connected": "서버가 연결되지 않았습니다",
+  "Server is not exists": "서버가 존재하지 않습니다",
+  "View is not exists": "View가 없습니다",
+  "Disconnected Server <{0}>": "Disconnected Server",
+  "Select to switch server": "Server 전환",
+  "Select to switch view": "View 전환",
+  "Select to run view": "View 실행",
+  "Select to run command": "명령어를 선택해 주세요",
+  "Select to generate Job Code": "생성할 Job Code 를 선택해 주세요",
+  "Select to switch only job": "Job을 선택해 주세요",
+  "Select to view Job Log": "Job Log 를 선택해 주세요"
+  "Jobs is not exists": "Jobs이 없습니다",
+  "There is no xml data to create a job": "Job을 생성하기 위한 Data (XML)이 없습니다",
+  "Job Data is not exist": "Job Data 가 없습니다",
+  "Jenkinsfile successfully validated": "Jenkinsfile successfully validated",
+  "If you want to modify the xml data and apply it to the server, run \"Create Job\"or \"Update Config Job\" (Shift + Alt + Enter)": "If you want to modify the xml data and apply it to the server, run \"Create Job\" or \"Update Config Job\" (Shift + Alt + Enter)"
 }

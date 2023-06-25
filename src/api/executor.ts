@@ -259,6 +259,13 @@ export class Executor {
         );
     }
 
+    async deleteJob(job: JobsModel): Promise<string> {
+        const uri = this.extractUrl(job.url);
+        return await this._jenkins._post<string>(
+            `${uri}/doDelete`
+        );
+    }
+
     async validateJenkinsfile(content: string): Promise<string> {
         // console.log(`validateJenkinsfile:: content <${content}>`);
         const formData = new FormData();

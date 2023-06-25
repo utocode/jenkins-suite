@@ -33,7 +33,7 @@ export async function switchConnection(context: vscode.ExtensionContext, connect
 export async function runJobAll(jobsProvider: JobsProvider, jobAll: boolean = true) {
     const jobs = await jobsProvider.getJobsWithView();
     if (!jobs || jobs.length === 0) {
-        showInfoMessageWithTimeout('Jobs is not exists');
+        showInfoMessageWithTimeout(vscode.l10n.t('Jobs is not exists'));
         return;
     }
 
@@ -87,6 +87,7 @@ export async function runJobAll(jobsProvider: JobsProvider, jobAll: boolean = tr
     }
 
     await vscode.window.showQuickPick(items, {
+        placeHolder: vscode.l10n.t("Select to run command"),
         canPickMany: false
     }).then(async (selectedItem) => {
         if (selectedItem) {

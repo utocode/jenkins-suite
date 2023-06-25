@@ -145,14 +145,13 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
         this.buildsProvider.executor = this._executor;
 
         if (connected) {
-            // vscode.window.showInformationMessage(`Connected Server <${this._currentServer?.name}>`);
-            showInfoMessageWithTimeout(`Connected Server <${this._currentServer?.description ?? this._currentServer?.name}>`);
+            showInfoMessageWithTimeout(vscode.l10n.t(`Connected Server <{0}>`, `${this._currentServer?.description ?? this._currentServer?.name}`));
         } else {
             const jobs: Partial<JobsModel> = {};
             this.buildsProvider.jobs = jobs as JobsModel;
             this.notifyProvider.clear();
 
-            vscode.window.showInformationMessage(`Disconnected Server <${this._currentServer?.name}>`);
+            vscode.window.showInformationMessage(vscode.l10n.t(`Disconnected Server <{0}>`, `${this._currentServer?.name}`));
         }
         this.refresh();
     }
@@ -183,7 +182,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
 
     public get executor() {
         if (!this._executor) {
-            showInfoMessageWithTimeout('Server is not connected');
+            showInfoMessageWithTimeout(vscode.l10n.t('Server is not connected'));
         }
         return this._executor;
     }

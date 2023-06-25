@@ -61,7 +61,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 const text = getSelectionText();
                 console.log(`text <${text}>`);
                 if (!text) {
-                    showInfoMessageWithTimeout('Job Data [XML] is not exist');
+                    showInfoMessageWithTimeout(vscode.l10n.t('Job Data is not exist'));
                     return ;
                 }
 
@@ -114,7 +114,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     printEditorWithNew(snippetItem.body.join('\n'));
 
                     setTimeout(() => {
-                        showInfoMessageWithTimeout('If you want to modify the xml data and apply it to the server, run "Create Job"or "Update Config Job" (Shift + Alt + Enter)', 12000);
+                        showInfoMessageWithTimeout(vscode.l10n.t('If you want to modify the xml data and apply it to the server, run "Create Job"or "Update Config Job" (Shift + Alt + Enter)'), 12000);
                     }, 1000);
                 });
             }),
@@ -158,6 +158,15 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 setTimeout(() => {
                     notifyMessageWithTimeout(mesg);
                     this.buildsProvider.jobs = job;
+                }, 3300);
+            }),
+            vscode.commands.registerCommand('utocode.deleteJob', async (job: JobsModel) => {
+                const mesg = await this.executor?.deleteJob(job);
+                console.log(`deleteJob <${mesg}>`);
+                setTimeout(() => {
+                    notifyMessageWithTimeout(mesg);
+                    this.buildsProvider.jobs = undefined;
+                    this.refresh();
                 }, 3300);
             }),
             vscode.commands.registerCommand('utocode.runJob', async () => {
@@ -214,7 +223,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     return;
                 }
                 if (text.startsWith('Jenkinsfile successfully validated')) {
-                    showInfoMessageWithTimeout(text);
+                    showInfoMessageWithTimeout(vscode.l10n.t(text));
                 } else {
                     logger.error(`validate <${text}>`);
                     showErrorMessage(text);
@@ -231,7 +240,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
             const mesg = await this.executor?.createJob(text, viewName);
             console.log(`result <${mesg}>`);
         } else {
-            showInfoMessageWithTimeout('There is no xml data to create a job.');
+            showInfoMessageWithTimeout(vscode.l10n.t('There is no xml data to create a job'));
         }
 
         setTimeout(() => {
@@ -434,7 +443,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
 
     public get executor() {
         if (!this._executor) {
-            showInfoMessageWithTimeout('Server is not connected');
+            showInfoMessageWithTimeout(vscode.l10n.t('Server is not connected'));
         }
         return this._executor;
     }

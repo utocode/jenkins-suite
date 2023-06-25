@@ -24,7 +24,7 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
             vscode.commands.registerCommand('utocode.switchView', async () => {
                 const views = this.info?.views;
                 if (!views) {
-                    showInfoMessageWithTimeout('View is not exists');
+                    showInfoMessageWithTimeout(vscode.l10n.t('View is not exists'));
                     return;
                 }
                 const items: ModelQuickPick<ViewsModel>[] = [];
@@ -138,7 +138,7 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
 
     public get executor() {
         if (!this._executor) {
-            showInfoMessageWithTimeout('Server is not connected');
+            showInfoMessageWithTimeout(vscode.l10n.t('Server is not connected'));
         }
         return this._executor;
     }

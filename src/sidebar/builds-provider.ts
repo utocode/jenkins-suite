@@ -11,7 +11,7 @@ import { getSelectionText, printEditorWithNew } from '../utils/editor';
 
 export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
 
-    private _jobs: JobsModel;
+    private _jobs: JobsModel | undefined;
 
     private _executor: Executor | undefined;
 
@@ -27,7 +27,7 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
             vscode.commands.registerCommand('utocode.getJobLog', async (build: BuildStatus) => {
                 const job = this.jobs;
                 if (!job) {
-                    showInfoMessageWithTimeout('Jenkins is not connected');
+                    showInfoMessageWithTimeout(vscode.l10n.t("Jenkins is not connected"));
                     return;
                 }
 
@@ -38,18 +38,22 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
             }),
             vscode.commands.registerCommand('utocode.switchBuild', async () => {
                 const builds = await this.getBuilds();
-                await vscode.window.showQuickPick(builds.map<string>(v => v.number.toString()), {
-                    placeHolder: vscode.l10n.t("Select to view Job Log")
-                }).then(async (selectedItem) => {
-                    if (selectedItem) {
-                        const text = await this.executor?.getJobLog(this.jobs.url, parseInt(selectedItem));
-                        if (text) {
-                            printEditorWithNew(text, 'shellscript');
+
+                if (builds && builds.length > 0) {
+                    await vscode.window.showQuickPick(builds.map<string>(v => v.number.toString()), {
+                        placeHolder: vscode.l10n.t("Select to view Job Log")
+                    }).then(async (selectedItem) => {
+                        if (selectedItem) {
+                            const text = await this.executor?.getJobLog(this.jobs!.url, parseInt(selectedItem));
+                            if (text) {
+                                printEditorWithNew(text, 'shellscript');
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }),
         );
+
         const jobs: Partial<JobsModel> = {};
         this._jobs = jobs as JobsModel;
     }
@@ -57,7 +61,7 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
     async getTreeItem(element: BuildStatus): Promise<vscode.TreeItem> {
         // console.log(`builds::treeItem <${element}>`);
         let history: BuildDetailStatus | undefined;
-        if (element && this._executor) {
+        if (element && this._jobs && this._executor) {
             history = await this.executor?.getBuild(this._jobs, element.number);
         }
         let treeItem: vscode.TreeItem = {
@@ -90,7 +94,7 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
     }
 
     async getChildren(element?: BuildStatus): Promise<BuildStatus[]> {
-        if (!this._jobs.name || !this._executor) {
+        if (!this._jobs || !this._jobs.name || !this._executor) {
             return [];
         }
 
@@ -98,7 +102,7 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
     }
 
     async getBuilds() {
-        if (!this._executor) {
+        if (!this._jobs || !this._executor) {
             return [];
         }
 
@@ -110,18 +114,18 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
         return builds;
     }
 
-    get jobs() {
+    get jobs(): JobsModel | undefined {
         return this._jobs;
     }
 
-    set jobs(jobs: JobsModel) {
+    set jobs(jobs: JobsModel | undefined) {
         this._jobs = jobs;
         this.refresh();
     }
 
     public get executor() {
         if (!this._executor) {
-            showInfoMessageWithTimeout('Server is not connected');
+            showInfoMessageWithTimeout(vscode.l10n.t('Server is not connected'));
         }
         return this._executor;
     }
