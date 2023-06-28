@@ -83,6 +83,12 @@ Jenkins Extension for Visual Studio Code
       "description": "Local Server",
       "username": "admin",
       "token": "__YOUR TOKEN__",
+      "ssh": {
+        "enabled": false,
+        "address": "192.168.0.1",
+        "username": "root",
+        "externalPath": "putty.exe"
+      },
       "wstalk": {
         "enabled": false,
         "url": "ws://localhost:9090/jenkins",
@@ -94,6 +100,12 @@ Jenkins Extension for Visual Studio Code
       "description": "Test Server",
       "username": "admin",
       "token": "__YOUR TOKEN__",
+      "ssh": {
+        "enabled": false,
+        "address": "192.168.0.1",
+        "username": "root",
+        "externalPath": "putty.exe"
+      },
       "wstalk": {
         "enabled": false,
         "url": "ws://localhost:9090/jenkins",
