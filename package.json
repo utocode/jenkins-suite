@@ -2,7 +2,7 @@
   "name": "jenkinssuite",
   "displayName": "Jenkins Suite",
   "description": "Manage your Jenkins Job inside Visual Studio Code",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "utocode",
   "publisher": "utocode",
   "icon": "images/logo.png",
@@ -22,7 +22,13 @@
   "keywords": [
     "jenkins",
     "jenkins dashboard",
+    "pipeline",
+    "pipeline validation",
     "devops",
+    "ci",
+    "cd",
+    "snippet",
+    "monitoring",
     "management"
   ],
   "capabilities": {
@@ -217,8 +223,27 @@
         "category": "jenkinssuite"
       },
       {
+        "command": "utocode.goHome",
+        "title": "%goHome.title%",
+        "icon": {
+          "dark": "resources/dark/home.png",
+          "light": "resources/light/home.svg"
+        },
+        "category": "jenkinssuite"
+      },
+      {
         "command": "utocode.connectServer",
         "title": "%connectServer.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.connectSSH",
+        "title": "%connectSSH.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.connectSSHExternal",
+        "title": "%connectSSHExternal.title%",
         "category": "jenkinssuite"
       },
       {
@@ -302,8 +327,8 @@
       "view/item/context": [
         {
           "when": "viewItem == 'connection'",
-          "command": "utocode.setPrimaryServer",
-          "group": "1_jenkinssuite_actions@1"
+          "command": "utocode.goHome",
+          "group": "inline"
         },
         {
           "when": "viewItem == 'connection'",
@@ -314,6 +339,21 @@
           "when": "viewItem == 'connection'",
           "command": "utocode.disconnectServer",
           "group": "1_jenkinssuite_actions@1"
+        },
+        {
+          "when": "viewItem == 'connection'",
+          "command": "utocode.connectSSH",
+          "group": "1_run@1"
+        },
+        {
+          "when": "viewItem == 'connection'",
+          "command": "utocode.connectSSHExternal",
+          "group": "1_run@1"
+        },
+        {
+          "when": "viewItem == 'connection'",
+          "command": "utocode.setPrimaryServer",
+          "group": "2_configure@1"
         },
         {
           "when": "viewItem == 'views'",
@@ -508,6 +548,22 @@
                   "description": "Token to Jenkins host. Required",
                   "type": "string"
                 },
+                "ssh.enabled": {
+                  "description": "SSH Plugin Installed",
+                  "type": "boolean"
+                },
+                "ssh.address": {
+                  "description": "SSH URL to Jenkins host",
+                  "type": "string"
+                },
+                "ssh.username": {
+                  "description": "Username to Jenkins host",
+                  "type": "string"
+                },
+                "ssh.externalPath": {
+                  "description": "external Program Path to Jenkins host",
+                  "type": "string"
+                },
                 "wstalk.enabled": {
                   "description": "Wstalk Plugin Installed",
                   "type": "boolean"
@@ -529,6 +585,12 @@
               "description": "Local Server",
               "username": "admin",
               "token": "",
+              "ssh": {
+                "enabled": false,
+                "address": "192.168.0.1",
+                "username": "root",
+                "externalPath": "putty.exe"
+              },
               "wstalk": {
                 "enabled": false,
                 "url": "ws://localhost:9090/jenkins",
@@ -540,6 +602,12 @@
               "description": "Test Server",
               "username": "admin",
               "token": "",
+              "ssh": {
+                "enabled": false,
+                "address": "192.168.0.1",
+                "username": "root",
+                "externalPath": "putty.exe"
+              },
               "wstalk": {
                 "enabled": false,
                 "url": "ws://localhost:9090/jenkins",

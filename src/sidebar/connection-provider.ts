@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import * as vscode from 'vscode';
 import { Executor } from '../api/executor';
 import { WebSocketClient } from '../api/ws';
@@ -31,6 +32,13 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             vscode.commands.registerCommand('utocode.connections.refresh', () => {
                 this.refresh();
             }),
+            vscode.commands.registerCommand('utocode.goHome', (server: JenkinsServer) => {
+                try {
+                    vscode.env.openExternal(vscode.Uri.parse(server.url));
+                } catch (error) {
+                    console.error('Error opening browser: ', error);
+                }
+            }),
             vscode.commands.registerCommand('utocode.connectServer', (server: JenkinsServer) => {
                 this.connect(server);
             }),
@@ -40,6 +48,29 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             vscode.commands.registerCommand('utocode.setPrimaryServer', (server: JenkinsServer) => {
                 if (JenkinsConfiguration.primary !== server.name) {
                     JenkinsConfiguration.primary = server.name;
+                }
+            }),
+            vscode.commands.registerCommand('utocode.connectSSH', (server: JenkinsServer) => {
+                if (server.ssh && server.ssh.enabled) {
+                    const terminal = vscode.window.createTerminal(server.name + ' terminal');
+                    const sshCommand = `ssh ${server.ssh.username}@${server.ssh.address}`;
+                    terminal.sendText(sshCommand);
+                    terminal.show();
+                } else {
+                    showInfoMessageWithTimeout(vscode.l10n.t('SSH Server is not exist'));
+                }
+            }),
+            vscode.commands.registerCommand('utocode.connectSSHExternal', (server: JenkinsServer) => {
+                if (server.ssh && server.ssh.enabled) {
+                    const program = server.ssh.externalPath ?? 'putty';
+                    const execCmd = `${program} ${server.ssh.username}@${server.ssh.address}`;
+                    exec(execCmd, (error, stdout, stderr) => {
+                        if (error) {
+                            console.log(stderr);
+                        }
+                    });
+                } else {
+                    showInfoMessageWithTimeout(vscode.l10n.t('SSH Server Address is not exist'));
                 }
             }),
             vscode.commands.registerCommand('utocode.views.refresh', () => {
@@ -100,7 +131,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
     public async connect(server: JenkinsServer) {
         try {
             if (server === undefined) {
-                return ;
+                return;
             }
             this._executor = new Executor(this.context, server);
             await this._executor.initialized();
@@ -109,7 +140,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
         } catch (error: any) {
             logger.error(error.message);
             vscode.window.showErrorMessage(error.message);
-            return ;
+            return;
         }
 
         try {

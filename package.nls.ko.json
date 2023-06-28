@@ -42,6 +42,8 @@
   "connectServer.title": "Connect",
   "disconnectServer.title": "Disconnect",
   "connections.refresh.title": "Refresh",
+  "connectSSH.title": "Connect SSH",
+  "connectSSHExternal.title": "Connect SSH (외부프로그램)",
   "views.refresh.title": "Refresh",
   "jobs.refresh.title": "Refresh",
   "snippets.refresh.title": "Refresh",

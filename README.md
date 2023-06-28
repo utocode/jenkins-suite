@@ -2,7 +2,7 @@
 
 Jenkins Extension for Visual Studio Code
 
-* 한글 문서 [한글문서](README_KO.md)
+* Korean Document [한글문서](README_KO.md)
 
 ## Prerequisites
 

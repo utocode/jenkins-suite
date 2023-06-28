@@ -10,7 +10,16 @@ export interface JenkinsProperty {
     description: string;
     username: string;
     token: string;
-    wstalk?: WsTalk
+    ssh?: SshServer;
+    wstalk?: WsTalk;
+}
+
+export interface SshServer {
+    enabled: boolean;
+    address: string;
+    username: string;
+    externalPath: string;
+    shellPath: string;
 }
 
 export interface WsTalk {
