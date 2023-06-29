@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.6] - 2023-06-29
+- Add Connect SSH port number
+
+## [0.0.5] - 2023-06-28
+- Add Connect SSH and Connect SSH with External
+
 ## [0.0.4] - 2023-06-25
 - A few bug fixes
 
