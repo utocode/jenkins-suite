@@ -5,7 +5,7 @@ import { WebSocketClient } from '../api/ws';
 import JenkinsConfiguration, { JenkinsServer } from '../config/settings';
 import { JobsModel, ViewsModel } from '../types/model';
 import { switchConnection } from '../ui/manage';
-import { showInfoMessageWithTimeout } from '../ui/ui';
+import { openLinkBrowser, showInfoMessageWithTimeout } from '../ui/ui';
 import logger from '../utils/logger';
 import { BuildsProvider } from './builds-provider';
 import { JobsProvider } from './jobs-provider';
@@ -33,11 +33,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
                 this.refresh();
             }),
             vscode.commands.registerCommand('utocode.goHome', (server: JenkinsServer) => {
-                try {
-                    vscode.env.openExternal(vscode.Uri.parse(server.url));
-                } catch (error) {
-                    console.error('Error opening browser: ', error);
-                }
+                openLinkBrowser(server.url);
             }),
             vscode.commands.registerCommand('utocode.connectServer', (server: JenkinsServer) => {
                 this.connect(server);
@@ -96,11 +92,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
                 buildsProvider.jobs = jobs as JobsModel;
             }),
             vscode.commands.registerCommand('utocode.openExternalBrowser', (job: JobsModel) => {
-                try {
-                    vscode.env.openExternal(vscode.Uri.parse(job.url));
-                } catch (error) {
-                    console.error('Error opening browser: ', error);
-                }
+                openLinkBrowser(job.url);
             }),
         );
 

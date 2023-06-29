@@ -131,6 +131,24 @@
         "category": "jenkinssuite"
       },
       {
+        "command": "utocode.openLinkView",
+        "title": "%openLinkView.title%",
+        "icon": {
+          "dark": "resources/dark/console.svg",
+          "light": "resources/light/console.svg"
+        },
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.openLinkJob",
+        "title": "%openLinkJob.title%",
+        "icon": {
+          "dark": "resources/dark/console.svg",
+          "light": "resources/light/console.svg"
+        },
+        "category": "jenkinssuite"
+      },
+      {
         "command": "utocode.createFolder",
         "title": "%createFolder.title%",
         "icon": {
@@ -146,6 +164,16 @@
           "dark": "resources/dark/gen-code.svg",
           "light": "resources/light/gen-code.svg"
         },
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.disabledJob",
+        "title": "%disabledJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.enabledJob",
+        "title": "%enabledJob.title%",
         "category": "jenkinssuite"
       },
       {
@@ -366,7 +394,27 @@
           "group": "1_jenkinssuite_actions@2"
         },
         {
-          "when": "viewItem == 'jobs'",
+          "when": "viewItem == 'views'",
+          "command": "utocode.openLinkView",
+          "group": "inline"
+        },
+        {
+          "when": "viewItem =~ /^jobs.*/",
+          "command": "utocode.openLinkJob",
+          "group": "inline"
+        },
+        {
+          "when": "viewItem == 'jobs_disabled'",
+          "command": "utocode.enabledJob",
+          "group": "2_configure@1"
+        },
+        {
+          "when": "viewItem == 'jobs' && viewItem != 'jobs_disabled'",
+          "command": "utocode.disabledJob",
+          "group": "2_configure@1"
+        },
+        {
+          "when": "viewItem =~ /^jobs.*/",
           "command": "utocode.getConfigJob",
           "group": "1_jenkinssuite_actions@3"
         },
@@ -376,12 +424,12 @@
           "group": "1_jenkinssuite_actions@3"
         },
         {
-          "when": "viewItem == 'jobs'",
+          "when": "viewItem =~ /^jobs.*/",
           "command": "utocode.deleteJob",
           "group": "1_jenkinssuite_actions@3"
         },
         {
-          "when": "viewItem == 'jobs'",
+          "when": "viewItem =~ /^jobs.*/",
           "command": "utocode.openExternalBrowser",
           "group": "1_jenkinssuite_actions@3"
         },

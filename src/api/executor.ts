@@ -266,6 +266,13 @@ export class Executor {
         );
     }
 
+    async enabledJob(job: JobsModel, flag: boolean = true): Promise<string> {
+        const uri = this.extractUrl(job.url) + '/' + (flag ? 'enable' : 'disable');
+        return await this._jenkins._post<string>(
+            `${uri}`
+        );
+    }
+
     async validateJenkinsfile(content: string): Promise<string> {
         // console.log(`validateJenkinsfile:: content <${content}>`);
         const formData = new FormData();

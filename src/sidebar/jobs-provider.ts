@@ -4,7 +4,7 @@ import JenkinsConfiguration from '../config/settings';
 import { BaseJobModel, BuildStatus, BuildsModel, JobModelType, JobParamDefinition, JobsModel, ModelQuickPick, ViewsModel, WsTalkMessage } from '../types/model';
 import { getJobParamDefinitions } from '../types/model-util';
 import { runJobAll } from '../ui/manage';
-import { showInfoMessageWithTimeout } from '../ui/ui';
+import { openLinkBrowser, showInfoMessageWithTimeout } from '../ui/ui';
 import { getSelectionText, printEditorWithNew } from '../utils/editor';
 import logger from '../utils/logger';
 import { getParameterDefinition, inferFileExtension, invokeSnippet } from '../utils/util';
@@ -31,6 +31,9 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
             vscode.commands.registerCommand('utocode.jobs.refresh', () => {
                 this.refresh();
             }),
+            vscode.commands.registerCommand('utocode.openLinkJob', (job: JobsModel) => {
+                openLinkBrowser(job.url);
+            }),
             vscode.commands.registerCommand('utocode.withJob', async () => {
                 if (!this.executor?.initialized()) {
                     return;
@@ -54,12 +57,12 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
 
                     setTimeout(() => {
                         vscode.commands.executeCommand('utocode.jobs.refresh');
-                    }, 1500);
+                    }, 2200);
                 });
             }),
             vscode.commands.registerCommand('utocode.updateConfigJob', async () => {
                 const text = getSelectionText();
-                console.log(`text <${text}>`);
+                // console.log(`text <${text}>`);
                 if (!text) {
                     showInfoMessageWithTimeout(vscode.l10n.t('Job Data is not exist'));
                     return;
@@ -169,6 +172,20 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     this.refresh();
                 }, 3300);
             }),
+            vscode.commands.registerCommand('utocode.enabledJob', async (job: JobsModel) => {
+                const mesg = await this.executor?.enabledJob(job);
+                setTimeout(() => {
+                    notifyMessageWithTimeout(mesg);
+                    this.buildsProvider.jobs = job;
+                }, 1500);
+            }),
+            vscode.commands.registerCommand('utocode.disabledJob', async (job: JobsModel) => {
+                const mesg = await this.executor?.enabledJob(job, false);
+                setTimeout(() => {
+                    notifyMessageWithTimeout(mesg);
+                    this.buildsProvider.jobs = job;
+                }, 1500);
+            }),
             vscode.commands.registerCommand('utocode.runJob', async () => {
                 runJobAll(this);
             }),
@@ -267,28 +284,28 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     icon = element._class === JobModelType.workflowJob ? 'green' : 'blue';
                 }
                 treeItem = {
-                    label: element.name,
+                    label: `${element.name}`,
                     collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
                     command: {
                         command: 'utocode.showBuilds',
                         title: 'Show Builds',
                         arguments: [element]
                     },
-                    contextValue: 'jobs',
+                    contextValue: jobDetail?.buildable ? 'jobs' : 'jobs_disabled',
                     // iconPath: new vscode.ThemeIcon('output-view-icon'),
                     iconPath: this.context.asAbsolutePath(`resources/job/${icon}.png`),
                     tooltip: this.makeToolTipJob(element)
                 };
             } else if (element._class === JobModelType.folder) {
                 treeItem = {
-                    label: element.name,
+                    label: `<${element.jobDetail?.jobs.length}> ${element.name}`,
                     collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
-                    command: {
-                        command: 'utocode.showBuilds',
-                        title: 'Show Builds',
-                        arguments: [element]
-                    },
-                    contextValue: 'jobs',
+                    // command: {
+                    //     command: 'utocode.showBuilds',
+                    //     title: 'Show Builds',
+                    //     arguments: [element]
+                    // },
+                    contextValue: 'jobs_folder',
                     iconPath: new vscode.ThemeIcon('folder'),
                     tooltip: this.makeToolTipFolder(element)
                 };
@@ -379,12 +396,24 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         return jobsModel;
     }
 
-    makeToolTipFolder(element: JobsModel) {
-        const jobDetail: BuildsModel = element.jobDetail!;
+    makeToolTipFolder(jobModel: JobsModel) {
+        const jobDetail: BuildsModel = jobModel.jobDetail!;
         const text = new vscode.MarkdownString();
+        text.appendMarkdown('### Summary: \n');
+        text.appendMarkdown(`${jobDetail.displayName ?? jobDetail.fullDisplayName}\n`);
+        text.appendMarkdown('\n---\n');
 
-        text.appendMarkdown('## Summary: \n');
-        text.appendMarkdown(jobDetail.displayName ?? jobDetail.fullDisplayName);
+        text.appendMarkdown(`### Jobs: \n`);
+        if (jobDetail.jobs && jobDetail.jobs.length > 0) {
+            for (let folderJob of jobDetail.jobs) {
+                text.appendMarkdown(`* ${folderJob.name}: ${folderJob.color}\n`);
+            }
+        } else {
+            text.appendMarkdown(' * **None**\n');
+        }
+        text.appendMarkdown('\n---\n');
+
+        text.appendMarkdown(`*${jobModel.url}*\n`);
         return text;
     }
 
@@ -408,14 +437,24 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
 
         text.appendMarkdown('\n---\n');
         text.appendMarkdown('### Summary: \n');
-        text.appendMarkdown(jobDetail.description ? jobDetail.description : jobDetail.fullDisplayName);
+        text.appendMarkdown(`${jobDetail.description ? jobDetail.description : jobDetail.fullDisplayName}\n`);
+        text.appendMarkdown('\n---\n');
+
+        text.appendMarkdown(`${jobModel.url}\n`);
         return text;
     }
 
-    getToolTip(element: JobsModel) {
-        const jobParam = element.jobParam!;
-        const tooltip = `Type: ${jobParam.type}\nDefault Value: ${jobParam.defaultParameterValue.value}`;
-        return tooltip;
+    getToolTip(jobModel: JobsModel) {
+        const jobParam = jobModel.jobParam!;
+        const text = new vscode.MarkdownString();
+        text.appendMarkdown(`### Job: \n`);
+        text.appendMarkdown(`* name: ${jobModel.fullDisplayName ?? jobModel.fullName}\n`);
+        text.appendMarkdown('\n---\n');
+
+        text.appendMarkdown(`### Parameter: \n`);
+        text.appendMarkdown(`* Type: _${jobParam.type}_\n`);
+        text.appendMarkdown(`* Default Value: *${jobParam.defaultParameterValue.value}*\n`);
+        return text;
     }
 
     public async getJobsWithFolder(folder: BaseJobModel): Promise<JobsModel[]> {

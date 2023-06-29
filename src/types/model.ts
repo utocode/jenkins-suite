@@ -45,6 +45,11 @@ export interface BaseJobModel extends BaseModel {
     jobParam?: JobParamDefinition
 }
 
+export interface FolderJobModel extends BaseModel {
+    color: BallColor
+}
+
+
 export interface JobsModel extends BaseJobModel {
     healthReport: HealthReport[]
     jobDetail?: BuildsModel
@@ -93,6 +98,7 @@ export interface BuildsModel extends BaseJobModel {
     queueItem: string
     concurrentBuild: boolean
     resumeBlocked: boolean
+    jobs: FolderJobModel[]
 }
 
 export enum JobModelType {

@@ -2,7 +2,7 @@ import path from 'path';
 import * as vscode from 'vscode';
 import { Executor } from '../api/executor';
 import { JenkinsInfo, ModelQuickPick, ViewsModel } from '../types/model';
-import { showInfoMessageWithTimeout } from '../ui/ui';
+import { openLinkBrowser, showInfoMessageWithTimeout } from '../ui/ui';
 import { printEditorWithNew } from '../utils/editor';
 import logger from '../utils/logger';
 import { JobsProvider } from './jobs-provider';
@@ -43,6 +43,9 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
                         jobsProvider.view = selectedItem.model!;
                     }
                 });
+            }),
+            vscode.commands.registerCommand('utocode.openLinkView', (view: ViewsModel) => {
+                openLinkBrowser(view.url);
             }),
             vscode.commands.registerCommand('utocode.createView', async () => {
                 const mesg = await this.executor?.createView();
@@ -129,6 +132,7 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
             text.appendMarkdown(`**Description:** ${viewModel.description}\n`);
             text.appendMarkdown('\n---\n');
         }
+
         text.appendMarkdown(`*${viewModel.url}*\n`);
         return text;
     }
