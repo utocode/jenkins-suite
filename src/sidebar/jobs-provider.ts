@@ -44,7 +44,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     { label: 'Create', description: 'Create a job with a new name' },
                 ];
                 await vscode.window.showQuickPick(items, {
-                    placeHolder: vscode.l10n.t("Select to run command")
+                    placeHolder: vscode.l10n.t("Select the command you want to execute")
                 }).then(async (selectedItem) => {
                     if (!selectedItem) {
                         return;
@@ -82,7 +82,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     });
 
                     await vscode.window.showQuickPick(items, {
-                        placeHolder: vscode.l10n.t("Select to run command")
+                        placeHolder: vscode.l10n.t("Select the command you want to execute")
                     }).then(async (selectedItem) => {
                         if (selectedItem) {
                             this.buildsProvider.jobs = selectedItem.model!;
@@ -91,7 +91,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 }
 
                 if (!jobs?.name) {
-                    vscode.window.showErrorMessage('Choices running job');
+                    vscode.window.showErrorMessage('Select running job');
                     return;
                 }
                 const mesg = await this.executor?.updateJobConfig(jobs.name, text);
@@ -136,7 +136,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 const items: ModelQuickPick<JobsModel>[] = [];
                 allJobs.filter(job => job._class !== JobModelType.folder.toString()).forEach(job => {
                     items.push({
-                        label: job.name,
+                        label: (job._class === JobModelType.freeStyleProject ? "$(terminal) " : "$(tasklist) ") + job.name,
                         description: job.jobDetail?.description,
                         model: job
                     });
@@ -164,8 +164,11 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 }, 3300);
             }),
             vscode.commands.registerCommand('utocode.deleteJob', async (job: JobsModel) => {
-                const mesg = await this.executor?.deleteJob(job);
-                console.log(`deleteJob <${mesg}>`);
+                let mesg = await this.executor?.deleteJob(job);
+                // console.log(`deleteJob <${mesg}>`);
+                if (mesg && !mesg.startsWith("Request failed")) {
+                    mesg = `Success to delete job <${job.name}>`;
+                }
                 setTimeout(() => {
                     notifyMessageWithTimeout(mesg);
                     this.buildsProvider.jobs = undefined;
@@ -174,17 +177,11 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
             }),
             vscode.commands.registerCommand('utocode.enabledJob', async (job: JobsModel) => {
                 const mesg = await this.executor?.enabledJob(job);
-                setTimeout(() => {
-                    notifyMessageWithTimeout(mesg);
-                    this.buildsProvider.jobs = job;
-                }, 1500);
+                this.refresh();
             }),
             vscode.commands.registerCommand('utocode.disabledJob', async (job: JobsModel) => {
                 const mesg = await this.executor?.enabledJob(job, false);
-                setTimeout(() => {
-                    notifyMessageWithTimeout(mesg);
-                    this.buildsProvider.jobs = job;
-                }, 1500);
+                this.refresh();
             }),
             vscode.commands.registerCommand('utocode.runJob', async () => {
                 runJobAll(this);
@@ -193,11 +190,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 runJobAll(this, false);
             }),
             vscode.commands.registerCommand('utocode.withJobLog', async (build: BuildStatus) => {
-                try {
-                    vscode.env.openExternal(vscode.Uri.parse(build.url + 'console'));
-                } catch (error) {
-                    console.error('Error opening browser:', error);
-                }
+                openLinkBrowser(build.url + 'console');
             }),
             vscode.commands.registerCommand('utocode.getJobHistory', async (message: WsTalkMessage) => {
                 const text = await this.executor?.getJobLog(message.url, message.number);
@@ -205,11 +198,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 printEditorWithNew(text);
             }),
             vscode.commands.registerCommand('utocode.withJobHistory', async (message: WsTalkMessage) => {
-                try {
-                    vscode.env.openExternal(vscode.Uri.parse(`${message.url}${message.number}/console`));
-                } catch (error) {
-                    console.error('Error opening browser: ', error);
-                }
+                openLinkBrowser(`${message.url}${message.number}/console`);
             }),
             vscode.commands.registerCommand('utocode.updateConfigView', async () => {
                 const view = this.view;

@@ -130,31 +130,31 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
         text.appendMarkdown(`## Jenkins\n`);
         text.appendMarkdown(`_${server.description ?? ' '}_\n`);
         text.appendMarkdown('\n---\n');
-        text.appendMarkdown(`  * name: __${server.name}__\n`);
-        text.appendMarkdown(`  * user: ${server.username}\n`);
-        text.appendMarkdown(`  * URL: *${server.url}*\n`);
+        text.appendMarkdown(`* name: __${server.name}__\n`);
+        text.appendMarkdown(`* user: **${server.username}**\n`);
+        text.appendMarkdown(`* URL: *${server.url}*\n`);
         text.appendMarkdown('\n---\n');
 
-        text.appendMarkdown(`## WsTalk\n`);
+        const wsStatus = vscode.Uri.file(this.context.asAbsolutePath(`resources/job/${server.wstalk?.enabled ? 'green' : 'grey'}_16.png`));
+        text.appendMarkdown(`## WsTalk ![Server](${wsStatus})\n`);
         text.appendMarkdown(`${server.wstalk?.description ?? ' '}\n`);
         text.appendMarkdown('\n---\n');
         if (server.wstalk?.enabled) {
-            text.appendMarkdown(`  * ${server.wstalk?.enabled ? 'enabled' : 'disabled'}\n`);
-            text.appendMarkdown(`  * URL: *${server.wstalk.url}*\n`);
+            text.appendMarkdown(`* URL: *${server.wstalk.url}*\n`);
         } else {
-            text.appendMarkdown(`  * ${server.wstalk?.enabled ? 'enabled' : 'disabled'}\n`);
+            text.appendMarkdown(`* ${server.wstalk?.enabled ? 'enabled' : 'disabled'}\n`);
         }
         text.appendMarkdown('\n---\n');
 
-        text.appendMarkdown(`## SSH\n`);
+        const sshStatus = vscode.Uri.file(this.context.asAbsolutePath(`resources/job/${server.ssh?.enabled ? 'green' : 'grey'}_16.png`));
+        text.appendMarkdown(`## SSH ![Server](${sshStatus})\n`);
         text.appendMarkdown('\n---\n');
         if (server.ssh?.enabled) {
-            text.appendMarkdown(`  * ${server.ssh?.enabled ? 'enabled' : 'disabled'}\n`);
-            text.appendMarkdown(`  * user: **${server.ssh.username}**\n`);
-            text.appendMarkdown(`  * address: **${server.ssh.address}**\n`);
-            text.appendMarkdown(`  * port: ${server.ssh.port}\n`);
+            text.appendMarkdown(`* user: **${server.ssh.username}**\n`);
+            text.appendMarkdown(`* address: **${server.ssh.address}**\n`);
+            text.appendMarkdown(`* port: ${server.ssh.port}\n`);
         } else {
-            text.appendMarkdown(`  * ${server.ssh?.enabled ? 'enabled' : 'disabled'}\n`);
+            text.appendMarkdown(`* ${server.ssh?.enabled ? 'enabled' : 'disabled'}\n`);
         }
         return text;
     }
@@ -175,7 +175,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             this._executor = new Executor(this.context, server);
             await this._executor.initialized();
             this._currentServer = server;
-            console.log(`  * jenkins <${this._currentServer.name}> url <${server.url}>`);
+            console.log(`  * jenkins <${this._currentServer.name}> url <${server.url}> `);
         } catch (error: any) {
             logger.error(error.message);
             vscode.window.showErrorMessage(error.message);
@@ -261,7 +261,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
         if (!this._executor) {
             throw new Error(`Jenkins is not connnected`);
         } else if (typeof this._executor[cmdName] !== 'function') {
-            throw new Error(`command <${cmdName}> is not function`);
+            throw new Error(`command < ${cmdName}> is not function`);
         }
 
         if (this._executor && typeof this._executor[cmdName] === 'function') {

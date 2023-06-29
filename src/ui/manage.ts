@@ -52,7 +52,7 @@ export async function runJobAll(jobsProvider: JobsProvider, jobAll: boolean = tr
                 });
             }
             items.push({
-                label: job.name,
+                label: (job._class === JobModelType.freeStyleProject ? "$(terminal) " : "$(tasklist) ") + job.name,
                 description: job.jobDetail?.description ? job.jobDetail?.description : job.jobDetail?.displayName,
                 model: job
             });
@@ -71,12 +71,12 @@ export async function runJobAll(jobsProvider: JobsProvider, jobAll: boolean = tr
 
         const folderJobsModel: JobsModel[] | undefined = await jobsProvider.getJobsWithFolder(job);
         if (folderJobsModel) {
-            for (let job1 of folderJobsModel) {
+            for (let folderJob of folderJobsModel) {
                 items.push({
-                    label: job1.name,
-                    description: job1.jobDetail?.description ? job1.jobDetail?.description : job1.name,
-                    detail: 'Folder: ' + job.name,
-                    model: job1
+                    label: (folderJob._class === JobModelType.freeStyleProject ? "$(terminal) " : "$(tasklist) ") + folderJob.name,
+                    description: folderJob.jobDetail?.description ? folderJob.jobDetail?.description : folderJob.name,
+                    detail: `${job.name}`,
+                    model: folderJob
                 });
             }
         }
@@ -87,7 +87,7 @@ export async function runJobAll(jobsProvider: JobsProvider, jobAll: boolean = tr
     }
 
     await vscode.window.showQuickPick(items, {
-        placeHolder: vscode.l10n.t("Select to run command"),
+        placeHolder: vscode.l10n.t("Select the job you want to build"),
         canPickMany: false
     }).then(async (selectedItem) => {
         if (selectedItem) {

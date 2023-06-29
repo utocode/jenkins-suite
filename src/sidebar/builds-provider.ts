@@ -123,6 +123,11 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
             return [];
         }
 
+        if (Object.keys(this._jobs).length === 0) {
+            showInfoMessageWithTimeout('Please select job first');
+            return [];
+        }
+
         const buildModel = await this._executor.getJob(this._jobs);
         let builds = buildModel.builds;
         if (builds && builds.length > JenkinsConfiguration.limitBuilds) {

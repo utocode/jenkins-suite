@@ -16,5 +16,7 @@
   "There is no xml data to create a job": "There is no xml data to create a job",
   "Job Data is not exist": "Job Data is not exist",
   "Jenkinsfile successfully validated": "Jenkinsfile successfully validated",
+  "Select the job you want to build": "Select the job you want to build",
+  "Select the command you want to execute": "Select the command you want to execute",
   "If you want to modify the xml data and apply it to the server, run \"Create Job\"or \"Update Config Job\" (Shift + Alt + Enter)": "If you want to modify the xml data and apply it to the server, run \"Create Job\" or \"Update Config Job\" (Shift + Alt + Enter)"
 }

@@ -1,7 +1,8 @@
 # Change Log
 
-## [0.0.7] - 2023-06-30
+## [0.0.7] - 2023-06-29
 - Add Enabled/Disabled Job
+- Update UI
 
 ## [0.0.6] - 2023-06-29
 - Add Connect SSH port number

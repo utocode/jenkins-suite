@@ -29,8 +29,12 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
                 }
                 const items: ModelQuickPick<ViewsModel>[] = [];
                 views.forEach(view => {
+                    let icon = this.getViewIcon(view._class);
+                    if (this._view && this._view.name === view.name) {
+                        icon = 'eye';
+                    }
                     items.push({
-                        label: view.name,
+                        label: `$(${icon}) ${view.name}`,
                         description: view._class.split('.').pop(),
                         model: view
                     });
@@ -96,17 +100,23 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
 
     readonly onDidChangeTreeData: vscode.Event<ViewsModel | ViewsModel[] | undefined> = this._onDidChangeTreeData.event;
 
-    getTreeItem(element: ViewsModel): vscode.TreeItem {
+    getViewIcon(name: string) {
         let icon = 'root-folder';
-        if (element.name === this._view?.name) {
-            icon = 'eye'; // 'root-folder-opened';
-        } else if (element._class === 'org.jenkinsci.plugins.categorizedview.CategorizedJobsView') {
+        if (name === 'org.jenkinsci.plugins.categorizedview.CategorizedJobsView') {
             icon = 'search';
-        } else if (element._class === 'udson.model.MyView"') {
+        } else if (name === 'hudson.model.MyView"') {
             icon = 'heart';
         }
+        return icon;
+    }
 
-        let treeItem; vscode.TreeItem;
+    getTreeItem(element: ViewsModel): vscode.TreeItem {
+        let icon = this.getViewIcon(element._class);
+        if (element.name === this._view?.name) {
+            icon = 'eye'; // 'root-folder-opened';
+        }
+
+        let treeItem: vscode.TreeItem;
         treeItem = {
             label: element.name,
             description: element.description,
