@@ -2,7 +2,7 @@
   "name": "jenkinssuite",
   "displayName": "Jenkins Suite",
   "description": "Manage your Jenkins Job inside Visual Studio Code",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "utocode",
   "publisher": "utocode",
   "icon": "images/logo.png",
@@ -15,13 +15,18 @@
     "vscode": "^1.74.0"
   },
   "categories": [
-    "Programming Languages",
+    "Debuggers",
     "Extension Packs",
+    "Linters",
+    "Programming Languages",
+    "Visualization",
     "Other"
   ],
   "keywords": [
     "jenkins",
+    "jenkinssuite",
     "jenkins dashboard",
+    "vscode",
     "pipeline",
     "pipeline validation",
     "devops",
@@ -549,19 +554,31 @@
                   "type": "string"
                 },
                 "ssh.enabled": {
-                  "description": "SSH Plugin Installed",
+                  "description": "SSH Server Enabled",
                   "type": "boolean"
                 },
                 "ssh.address": {
-                  "description": "SSH URL to Jenkins host",
+                  "description": "SSH URL to SSH",
                   "type": "string"
                 },
+                "ssh.port": {
+                  "description": "SSH Port number to SSH",
+                  "type": "number"
+                },
                 "ssh.username": {
-                  "description": "Username to Jenkins host",
+                  "description": "Username to SSH",
                   "type": "string"
                 },
                 "ssh.externalPath": {
-                  "description": "external Program Path to Jenkins host",
+                  "description": "external Program Path to SSH",
+                  "type": "string"
+                },
+                "ssh.externalArg": {
+                  "description": "external Program Argument to SSH",
+                  "type": "string"
+                },
+                "ssh.extraArg": {
+                  "description": "external Program Extra Argument to SSH",
                   "type": "string"
                 },
                 "wstalk.enabled": {
@@ -569,11 +586,11 @@
                   "type": "boolean"
                 },
                 "wstalk.url": {
-                  "description": "Wstalk URL to Jenkins host",
+                  "description": "Wstalk URL to Jenkins Wstalk host",
                   "type": "string"
                 },
                 "wstalk.description": {
-                  "description": "Wstalk to Jenkins Wstalk host",
+                  "description": "Wstalk to Jenkins Wstalk description",
                   "type": "string"
                 }
               }
@@ -588,8 +605,10 @@
               "ssh": {
                 "enabled": false,
                 "address": "192.168.0.1",
+                "port": 22,
                 "username": "root",
-                "externalPath": "putty.exe"
+                "externalPath": "putty.exe",
+                "externalArg": "-P"
               },
               "wstalk": {
                 "enabled": false,
@@ -605,8 +624,10 @@
               "ssh": {
                 "enabled": false,
                 "address": "192.168.0.1",
+                "port": 22,
                 "username": "root",
-                "externalPath": "putty.exe"
+                "externalPath": "putty.exe",
+                "externalArg": "-P"
               },
               "wstalk": {
                 "enabled": false,

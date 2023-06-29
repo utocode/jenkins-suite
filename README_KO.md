@@ -87,6 +87,7 @@ VS Code에서 가능하면 마우스 없이 빠른 일을 하기 위해 개발�
       "ssh": {
         "enabled": false,
         "address": "192.168.0.1",
+        "port": 22,
         "username": "root",
         "externalPath": "putty.exe"
       },
@@ -104,6 +105,7 @@ VS Code에서 가능하면 마우스 없이 빠른 일을 하기 위해 개발�
       "ssh": {
         "enabled": false,
         "address": "192.168.0.1",
+        "port": 22,
         "username": "root",
         "externalPath": "putty.exe"
       },
@@ -128,12 +130,14 @@ VS Code에서 가능하면 마우스 없이 빠른 일을 하기 위해 개발�
       "ssh": {                                   # SSH 서버
         "enabled": false,                        # SSH 사용 여부
         "address": "192.168.0.1",                # 접속할 SSH 서버
+        "port": 22,                              # SSH 포트번호
         "username": "root",                      # SSH 계정
-        "externalPath": "putty.exe"              # SSH 외부 프로그램
+        "externalPath": "putty.exe",             # SSH 외부 프로그램
+        "externalArg": "-P"                      # SSH 외부 프로그램의 Argument
       },
       "wstalk": {                                # WsTalk plugin 설치 필요
         "enabled": false,                        # 사용 여부
-        "url": "ws://localhost:9090/jenkins",    # URL. [port: 9090], prefix: /jenkins (수정 불가)
+        "url": "ws://localhost:9090/jenkins",    # URL. port (9090), prefix (/jenkins: [수정 불가])
         "description": "WsTalk for Local Server" # 서버 설명
       }
     }

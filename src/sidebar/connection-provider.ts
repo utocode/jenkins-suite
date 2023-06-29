@@ -53,7 +53,8 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             vscode.commands.registerCommand('utocode.connectSSH', (server: JenkinsServer) => {
                 if (server.ssh && server.ssh.enabled) {
                     const terminal = vscode.window.createTerminal(server.name + ' terminal');
-                    const sshCommand = `ssh ${server.ssh.username}@${server.ssh.address}`;
+                    const port = server.ssh.port === 22 ? '' : ' -p ' + server.ssh.port;
+                    const sshCommand = `ssh ${server.ssh.username}@${server.ssh.address}${port}`;
                     terminal.sendText(sshCommand);
                     terminal.show();
                 } else {
@@ -63,7 +64,19 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             vscode.commands.registerCommand('utocode.connectSSHExternal', (server: JenkinsServer) => {
                 if (server.ssh && server.ssh.enabled) {
                     const program = server.ssh.externalPath ?? 'putty';
-                    const execCmd = `${program} ${server.ssh.username}@${server.ssh.address}`;
+                    let portArg = server.ssh.externalArg ?? '-P';
+                    if (!server.ssh.externalArg) {
+                        if (program.endsWith('putty.exe')) {
+                            portArg = '-P';
+                        } else {
+                            portArg = ':';
+                        }
+                    }
+                    if (portArg.startsWith('-')) {
+                        portArg = ` ${portArg} `;
+                    }
+                    const port = server.ssh.port === 22 ? '' : `${portArg}${server.ssh.port}`;
+                    const execCmd = `${program} ${server.ssh.username}@${server.ssh.address}${port} ${server.ssh.extraArg ?? ''}`;
                     exec(execCmd, (error, stdout, stderr) => {
                         if (error) {
                             console.log(stderr);

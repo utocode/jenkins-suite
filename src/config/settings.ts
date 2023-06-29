@@ -17,8 +17,11 @@ export interface JenkinsProperty {
 export interface SshServer {
     enabled: boolean;
     address: string;
+    port: number;
     username: string;
     externalPath: string;
+    externalArg: string;
+    extraArg?: string;
     shellPath: string;
 }
 

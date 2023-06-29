@@ -86,8 +86,10 @@ Jenkins Extension for Visual Studio Code
       "ssh": {
         "enabled": false,
         "address": "192.168.0.1",
+        "port": 22,
         "username": "root",
-        "externalPath": "putty.exe"
+        "externalPath": "putty.exe",
+        "externalArg": "-P"
       },
       "wstalk": {
         "enabled": false,
@@ -103,8 +105,10 @@ Jenkins Extension for Visual Studio Code
       "ssh": {
         "enabled": false,
         "address": "192.168.0.1",
+        "port": 22,
         "username": "root",
-        "externalPath": "putty.exe"
+        "externalPath": "putty.exe",
+        "externalArg": "-P"
       },
       "wstalk": {
         "enabled": false,
