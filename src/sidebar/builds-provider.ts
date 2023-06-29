@@ -76,21 +76,30 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
 
     getToolTip(element: BuildDetailStatus) {
         const actions = element.actions;
-        const results: string[] = [];
+
+        const text = new vscode.MarkdownString();
         const paramAction: JobParameter[] | undefined = getParameterAction(actions);
-        if (paramAction) {
-            results.push('Parameters: ');
-            paramAction.map(param => results.push(`  ${param.name}: [${param.value}]`));
+        text.appendMarkdown(`### Parameters: \n`);
+        if (paramAction && paramAction.length > 0) {
+            for (let param of paramAction) {
+                text.appendMarkdown(`  * ${param.name} (${param.value}) \n`);
+            }
+        } else {
+            text.appendMarkdown(' **None**\n');
         }
+        text.appendMarkdown('\n---\n');
+
         const causeAction: CauseParameter[] | undefined = getCauseAction(actions);
         if (causeAction) {
-            if (results.length > 0) {
-                results.push('');
+            text.appendMarkdown(`### Causes: \n`);
+            for (let param of causeAction) {
+                text.appendMarkdown(`  * ${param.shortDescription}\n`);
             }
-            causeAction.forEach(param => results.push(param.shortDescription));
         }
-        results.push(getLocalDate(element.timestamp));
-        return results.join('\n');
+        text.appendMarkdown('\n---\n');
+
+        text.appendMarkdown(`**${getLocalDate(element.timestamp)}**`);
+        return text;
     }
 
     async getChildren(element?: BuildStatus): Promise<BuildStatus[]> {

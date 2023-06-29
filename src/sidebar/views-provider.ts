@@ -114,9 +114,23 @@ export class ViewsProvider implements vscode.TreeDataProvider<ViewsModel> {
                 arguments: [element]
             },
             contextValue: 'views',
-            iconPath: new vscode.ThemeIcon(icon)
+            iconPath: new vscode.ThemeIcon(icon),
+            tooltip: this.makeToolTip(element)
         };
         return treeItem;
+    }
+
+    makeToolTip(viewModel: ViewsModel) {
+        const text = new vscode.MarkdownString();
+
+        text.appendMarkdown(`## ${viewModel.name}\n`);
+        text.appendMarkdown('\n---\n');
+        if (viewModel.description) {
+            text.appendMarkdown(`**Description:** ${viewModel.description}\n`);
+            text.appendMarkdown('\n---\n');
+        }
+        text.appendMarkdown(`*${viewModel.url}*\n`);
+        return text;
     }
 
     getChildren(element?: ViewsModel | undefined): vscode.ProviderResult<ViewsModel[]> {

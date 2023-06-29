@@ -128,9 +128,43 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             collapsibleState: vscode.TreeItemCollapsibleState.None,
             contextValue: 'connection',
             iconPath: this.context.asAbsolutePath(`resources/job/${status}.png`),
-            tooltip: 'Server: ' + element.name + '\nUser: ' + element.username + '\nURL: ' + element.url
+            tooltip: this.viewServer(element)
         };
         return treeItem;
+    }
+
+    viewServer(server: JenkinsServer) {
+        const text = new vscode.MarkdownString();
+        text.appendMarkdown(`## Jenkins\n`);
+        text.appendMarkdown(`_${server.description ?? ' '}_\n`);
+        text.appendMarkdown('\n---\n');
+        text.appendMarkdown(`  * name: __${server.name}__\n`);
+        text.appendMarkdown(`  * user: ${server.username}\n`);
+        text.appendMarkdown(`  * URL: *${server.url}*\n`);
+        text.appendMarkdown('\n---\n');
+
+        text.appendMarkdown(`## WsTalk\n`);
+        text.appendMarkdown(`${server.wstalk?.description ?? ' '}\n`);
+        text.appendMarkdown('\n---\n');
+        if (server.wstalk?.enabled) {
+            text.appendMarkdown(`  * ${server.wstalk?.enabled ? 'enabled' : 'disabled'}\n`);
+            text.appendMarkdown(`  * URL: *${server.wstalk.url}*\n`);
+        } else {
+            text.appendMarkdown(`  * ${server.wstalk?.enabled ? 'enabled' : 'disabled'}\n`);
+        }
+        text.appendMarkdown('\n---\n');
+
+        text.appendMarkdown(`## SSH\n`);
+        text.appendMarkdown('\n---\n');
+        if (server.ssh?.enabled) {
+            text.appendMarkdown(`  * ${server.ssh?.enabled ? 'enabled' : 'disabled'}\n`);
+            text.appendMarkdown(`  * user: **${server.ssh.username}**\n`);
+            text.appendMarkdown(`  * address: **${server.ssh.address}**\n`);
+            text.appendMarkdown(`  * port: ${server.ssh.port}\n`);
+        } else {
+            text.appendMarkdown(`  * ${server.ssh?.enabled ? 'enabled' : 'disabled'}\n`);
+        }
+        return text;
     }
 
     getChildren(element?: JenkinsServer): JenkinsServer[] {

@@ -44,7 +44,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                     placeHolder: vscode.l10n.t("Select to run command")
                 }).then(async (selectedItem) => {
                     if (!selectedItem) {
-                        return ;
+                        return;
                     }
                     if (selectedItem.label === 'Create') {
                         vscode.commands.executeCommand('utocode.createJob');
@@ -62,7 +62,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 console.log(`text <${text}>`);
                 if (!text) {
                     showInfoMessageWithTimeout(vscode.l10n.t('Job Data is not exist'));
-                    return ;
+                    return;
                 }
 
                 let jobs = this.buildsProvider.jobs;
@@ -381,24 +381,30 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
 
     makeToolTipFolder(element: JobsModel) {
         const jobDetail: BuildsModel = element.jobDetail!;
-        const results: string[] = [];
+        const text = new vscode.MarkdownString();
 
-        results.push('Summary:');
-        results.push(jobDetail.displayName ?? jobDetail.fullDisplayName);
-        return results.join('\n');
+        text.appendMarkdown('## Summary: \n');
+        text.appendMarkdown(jobDetail.displayName ?? jobDetail.fullDisplayName);
+        return text;
     }
 
     makeToolTipJob(element: JobsModel) {
         const jobDetail: BuildsModel = element.jobDetail!;
-        const results: string[] = [];
         const paramAction: JobParamDefinition[] | undefined = getJobParamDefinitions(jobDetail.property);
-        if (paramAction && paramAction) {
-            results.push(`Parameters: ${paramAction.length}`);
+        const text = new vscode.MarkdownString();
+        text.appendMarkdown(`### Parameters: \n`);
+        if (paramAction && paramAction.length > 0) {
+            for (let param of paramAction) {
+                text.appendMarkdown(`  * ${param.name} (${param.defaultParameterValue.value}) \n`);
+            }
+        } else {
+            text.appendMarkdown(' **None**\n');
         }
 
-        results.push('Summary:');
-        results.push(jobDetail.description ? jobDetail.description : jobDetail.fullDisplayName);
-        return results.join('\n');
+        text.appendMarkdown('\n---\n');
+        text.appendMarkdown('## Summary: \n');
+        text.appendMarkdown(jobDetail.description ? jobDetail.description : jobDetail.fullDisplayName);
+        return text;
     }
 
     getToolTip(element: JobsModel) {
