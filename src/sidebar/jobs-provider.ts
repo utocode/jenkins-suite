@@ -388,21 +388,26 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         return text;
     }
 
-    makeToolTipJob(element: JobsModel) {
-        const jobDetail: BuildsModel = element.jobDetail!;
+    makeToolTipJob(jobModel: JobsModel) {
+        const jobDetail: BuildsModel = jobModel.jobDetail!;
         const paramAction: JobParamDefinition[] | undefined = getJobParamDefinitions(jobDetail.property);
         const text = new vscode.MarkdownString();
+        text.appendMarkdown(`### Job: \n`);
+        text.appendMarkdown(`* name: ${jobModel.name}\n`);
+        text.appendMarkdown(`* buildable: ${jobModel.jobDetail?.buildable}\n`);
+        text.appendMarkdown('\n---\n');
+
         text.appendMarkdown(`### Parameters: \n`);
         if (paramAction && paramAction.length > 0) {
             for (let param of paramAction) {
-                text.appendMarkdown(`  * ${param.name} (${param.defaultParameterValue.value}) \n`);
+                text.appendMarkdown(`* ${param.name} (${param.defaultParameterValue.value}) \n`);
             }
         } else {
-            text.appendMarkdown(' **None**\n');
+            text.appendMarkdown(' * **None**\n');
         }
 
         text.appendMarkdown('\n---\n');
-        text.appendMarkdown('## Summary: \n');
+        text.appendMarkdown('### Summary: \n');
         text.appendMarkdown(jobDetail.description ? jobDetail.description : jobDetail.fullDisplayName);
         return text;
     }
