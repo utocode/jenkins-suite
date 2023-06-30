@@ -159,6 +159,25 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
             vscode.commands.registerCommand('utocode.addReservation', async (job: JobsModel) => {
                 this.reservationProvider.addReservation(job);
             }),
+            vscode.commands.registerCommand('utocode.runAddReservation', async () => {
+                const allJobs = await this.getJobsWithView();
+                const items: ModelQuickPick<JobsModel>[] = [];
+                allJobs.filter(job => job._class !== JobModelType.folder.toString()).forEach(job => {
+                    items.push({
+                        label: (job._class === JobModelType.freeStyleProject ? "$(terminal) " : "$(tasklist) ") + job.name,
+                        description: job.jobDetail?.description,
+                        model: job
+                    });
+                });
+
+                await vscode.window.showQuickPick(items, {
+                    placeHolder: vscode.l10n.t("Select to switch only job")
+                }).then(async (selectedItem) => {
+                    if (selectedItem) {
+                        this.reservationProvider.addReservation(selectedItem.model!);
+                    }
+                });
+            }),
             vscode.commands.registerCommand('utocode.buildJob', async (job: JobsModel) => {
                 const mesg = await this.executor?.buildJobWithParameter(job, JenkinsConfiguration.buildDelay);
                 console.log(`buildJob <${mesg}>`);
