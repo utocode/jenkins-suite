@@ -11,6 +11,7 @@ import { getParameterDefinition, inferFileExtension, invokeSnippet } from '../ut
 import { notifyMessageWithTimeout, showErrorMessage } from '../utils/vsc';
 import { FlowDefinition, parseXml } from '../utils/xml';
 import { BuildsProvider } from './builds-provider';
+import { ReservationProvider } from './reservation-provider';
 
 export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
 
@@ -22,7 +23,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
 
     readonly onDidChangeTreeData: vscode.Event<JobsModel | JobsModel[] | undefined> = this._onDidChangeTreeData.event;
 
-    constructor(protected context: vscode.ExtensionContext, private readonly buildsProvider: BuildsProvider) {
+    constructor(protected context: vscode.ExtensionContext, private readonly buildsProvider: BuildsProvider, private readonly reservationProvider: ReservationProvider) {
         this.registerContext();
     }
 
@@ -155,6 +156,28 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
                 console.log(`text <${text}>`);
                 printEditorWithNew(text);
             }),
+            vscode.commands.registerCommand('utocode.addReservation', async (job: JobsModel) => {
+                this.reservationProvider.addReservation(job);
+            }),
+            vscode.commands.registerCommand('utocode.runAddReservation', async () => {
+                const allJobs = await this.getJobsWithView();
+                const items: ModelQuickPick<JobsModel>[] = [];
+                allJobs.filter(job => job._class !== JobModelType.folder.toString()).forEach(job => {
+                    items.push({
+                        label: (job._class === JobModelType.freeStyleProject ? "$(terminal) " : "$(tasklist) ") + job.name,
+                        description: job.jobDetail?.description,
+                        model: job
+                    });
+                });
+
+                await vscode.window.showQuickPick(items, {
+                    placeHolder: vscode.l10n.t("Select to switch only job")
+                }).then(async (selectedItem) => {
+                    if (selectedItem) {
+                        this.reservationProvider.addReservation(selectedItem.model!);
+                    }
+                });
+            }),
             vscode.commands.registerCommand('utocode.buildJob', async (job: JobsModel) => {
                 const mesg = await this.executor?.buildJobWithParameter(job, JenkinsConfiguration.buildDelay);
                 console.log(`buildJob <${mesg}>`);
@@ -261,10 +284,10 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         if (element && element.jobParam && element.level === 100) {
             const jobParam = element.jobParam;
             treeItem = {
-                label: jobParam.name,
+                label: `${jobParam.name} [${jobParam.defaultParameterValue.value}]`,
                 collapsibleState: vscode.TreeItemCollapsibleState.None,
                 iconPath: new vscode.ThemeIcon('file-code'),
-                tooltip: this.getToolTip(element) // `Type: ${jobParam.type}\nDefault Value: ${jobParam.defaultParameterValue.value}`
+                tooltip: this.getToolTip(element)
             };
         } else {
             if (element._class === JobModelType.freeStyleProject || element._class === JobModelType.workflowJob) {
@@ -441,7 +464,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         text.appendMarkdown('\n---\n');
 
         text.appendMarkdown(`### Parameter: \n`);
-        text.appendMarkdown(`* Type: _${jobParam.type}_\n`);
+        text.appendMarkdown(`* Type: _${jobParam.type.substring(0, jobParam.type.length - 'ParameterValue'.length)}_\n`);
         text.appendMarkdown(`* Default Value: *${jobParam.defaultParameterValue.value}*\n`);
         return text;
     }

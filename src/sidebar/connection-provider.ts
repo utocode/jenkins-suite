@@ -10,6 +10,7 @@ import logger from '../utils/logger';
 import { BuildsProvider } from './builds-provider';
 import { JobsProvider } from './jobs-provider';
 import { NotifyProvider } from './notify-provider';
+import { ReservationProvider } from './reservation-provider';
 import { ViewsProvider } from './views-provider';
 
 export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer> {
@@ -20,11 +21,13 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
 
     private _currentServer: JenkinsServer | undefined;
 
+    private _primary: string;
+
     private _onDidChangeTreeData: vscode.EventEmitter<JenkinsServer | undefined> = new vscode.EventEmitter<JenkinsServer | undefined>();
 
     readonly onDidChangeTreeData: vscode.Event<JenkinsServer | JenkinsServer[] | undefined> = this._onDidChangeTreeData.event;
 
-    constructor(protected context: vscode.ExtensionContext, private readonly viewsProvider: ViewsProvider, private readonly jobsProvider: JobsProvider, private readonly buildsProvider: BuildsProvider, private readonly notifyProvider: NotifyProvider) {
+    constructor(protected context: vscode.ExtensionContext, private readonly viewsProvider: ViewsProvider, private readonly jobsProvider: JobsProvider, private readonly buildsProvider: BuildsProvider, private readonly reservationProvider: ReservationProvider, private readonly notifyProvider: NotifyProvider) {
         context.subscriptions.push(
             vscode.commands.registerCommand('utocode.switchConnection', async () => {
                 switchConnection(context, this);
@@ -44,6 +47,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             vscode.commands.registerCommand('utocode.setPrimaryServer', (server: JenkinsServer) => {
                 if (JenkinsConfiguration.primary !== server.name) {
                     JenkinsConfiguration.primary = server.name;
+                    this._primary = server.name;
                 }
             }),
             vscode.commands.registerCommand('utocode.connectSSH', (server: JenkinsServer) => {
@@ -96,9 +100,9 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             }),
         );
 
-        const primary = JenkinsConfiguration.primary;
-        if (primary) {
-            const server = this.getServer(primary);
+        this._primary = JenkinsConfiguration.primary;
+        if (this._primary) {
+            const server = this.getServer(this._primary);
             this.connect(server);
         }
     }
@@ -113,12 +117,13 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
                 status = 'red';
             }
         }
+
         let treeItem; vscode.TreeItem;
         treeItem = {
             label: element.name,
             description: element.description,
             collapsibleState: vscode.TreeItemCollapsibleState.None,
-            contextValue: 'connection',
+            contextValue: 'connection' + (this._primary && this._primary === element.name ? '_on' : ''),
             iconPath: this.context.asAbsolutePath(`resources/job/${status}.png`),
             tooltip: this.viewServer(element)
         };
@@ -213,6 +218,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
         this.viewsProvider.executor = this._executor;
         this.jobsProvider.executor = this._executor;
         this.buildsProvider.executor = this._executor;
+        this.reservationProvider.executor = this._executor;
 
         if (connected) {
             showInfoMessageWithTimeout(vscode.l10n.t(`Connected Server <{0}>`, `${this._currentServer?.description ?? this._currentServer?.name}`));

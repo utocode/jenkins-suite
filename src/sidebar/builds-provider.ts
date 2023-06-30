@@ -21,6 +21,9 @@ export class BuildsProvider implements vscode.TreeDataProvider<BuildStatus> {
 
     constructor(protected context: vscode.ExtensionContext) {
         context.subscriptions.push(
+            vscode.commands.registerCommand('utocode.builds.refresh', () => {
+                this.refresh();
+            }),
             vscode.commands.registerCommand('utocode.showBuilds', (job: JobsModel) => {
                 this.jobs = job;
             }),
