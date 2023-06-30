@@ -21,6 +21,8 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
 
     private _currentServer: JenkinsServer | undefined;
 
+    private _primary: string;
+
     private _onDidChangeTreeData: vscode.EventEmitter<JenkinsServer | undefined> = new vscode.EventEmitter<JenkinsServer | undefined>();
 
     readonly onDidChangeTreeData: vscode.Event<JenkinsServer | JenkinsServer[] | undefined> = this._onDidChangeTreeData.event;
@@ -45,6 +47,7 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             vscode.commands.registerCommand('utocode.setPrimaryServer', (server: JenkinsServer) => {
                 if (JenkinsConfiguration.primary !== server.name) {
                     JenkinsConfiguration.primary = server.name;
+                    this._primary = server.name;
                 }
             }),
             vscode.commands.registerCommand('utocode.connectSSH', (server: JenkinsServer) => {
@@ -97,9 +100,9 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
             }),
         );
 
-        const primary = JenkinsConfiguration.primary;
-        if (primary) {
-            const server = this.getServer(primary);
+        this._primary = JenkinsConfiguration.primary;
+        if (this._primary) {
+            const server = this.getServer(this._primary);
             this.connect(server);
         }
     }
@@ -114,12 +117,13 @@ export class ConnectionProvider implements vscode.TreeDataProvider<JenkinsServer
                 status = 'red';
             }
         }
+
         let treeItem; vscode.TreeItem;
         treeItem = {
             label: element.name,
             description: element.description,
             collapsibleState: vscode.TreeItemCollapsibleState.None,
-            contextValue: 'connection',
+            contextValue: 'connection' + (this._primary && this._primary === element.name ? '_on' : ''),
             iconPath: this.context.asAbsolutePath(`resources/job/${status}.png`),
             tooltip: this.viewServer(element)
         };

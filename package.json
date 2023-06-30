@@ -406,32 +406,32 @@
       ],
       "view/item/context": [
         {
-          "when": "viewItem == 'connection'",
+          "when": "view == 'utocode.views.connection'",
           "command": "utocode.goHome",
           "group": "inline"
         },
         {
-          "when": "viewItem == 'connection'",
+          "when": "view == 'utocode.views.connection'",
           "command": "utocode.connectServer",
           "group": "1_jenkinssuite_actions@1"
         },
         {
-          "when": "viewItem == 'connection'",
+          "when": "view == 'utocode.views.connection'",
           "command": "utocode.disconnectServer",
           "group": "1_jenkinssuite_actions@1"
         },
         {
-          "when": "viewItem == 'connection'",
+          "when": "view == 'utocode.views.connection'",
           "command": "utocode.connectSSH",
           "group": "1_run@1"
         },
         {
-          "when": "viewItem == 'connection'",
+          "when": "view == 'utocode.views.connection'",
           "command": "utocode.connectSSHExternal",
           "group": "1_run@1"
         },
         {
-          "when": "viewItem == 'connection'",
+          "when": "view == 'utocode.views.connection' && viewItem != 'connection_on'",
           "command": "utocode.setPrimaryServer",
           "group": "2_configure@1"
         },
