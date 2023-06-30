@@ -164,6 +164,28 @@ export class Executor {
         );
     }
 
+    async buildJobWithForm(job: JobsModel, formData: FormData, delay: number = 3): Promise<string> {
+        let flag: boolean = true;
+        const jobParams = getParameterDefinition(job.jobDetail ?? undefined);
+        const uri = this.extractUrl(job.url);
+        if (delay < 1) {
+            delay = 1;
+        } else if (delay > 99) {
+            delay = 99;
+        }
+
+        if (jobParams && jobParams.length > 0) {
+            console.log(formData);
+            return await this._jenkins._postForm<string>(
+                `${uri}/buildWithParameters?delay=${delay}sec`, formData
+            );
+        } else {
+            return await this._jenkins._post<string>(
+                `${uri}/build?delay=${delay}sec`
+            );
+        }
+    }
+
     async buildJobWithParameter(job: JobsModel, delay: number = 3): Promise<string> {
         let flag: boolean = true;
         const jobParams = getParameterDefinition(job.jobDetail ?? undefined);

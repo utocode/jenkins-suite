@@ -83,6 +83,11 @@
           "name": "%views.builds.title%"
         },
         {
+          "id": "utocode.views.reservation",
+          "name": "%views.reservation.title%",
+          "visibility": "collapsed"
+        },
+        {
           "id": "utocode.views.notify",
           "name": "%views.notify.title%",
           "visibility": "collapsed",
@@ -120,6 +125,20 @@
       {
         "command": "utocode.runFolderJob",
         "title": "%runFolderJob.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.addReservation",
+        "title": "%addReservation.title%",
+        "category": "jenkinssuite"
+      },
+      {
+        "command": "utocode.cancelReservation",
+        "title": "%cancelReservation.title%",
+        "icon": {
+          "dark": "resources/dark/cancel.svg",
+          "light": "resources/light/cancel.svg"
+        },
         "category": "jenkinssuite"
       },
       {
@@ -322,6 +341,33 @@
         }
       },
       {
+        "command": "utocode.builds.refresh",
+        "title": "%builds.refresh.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "utocode.reservation.refresh",
+        "title": "%reservation.refresh.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "utocode.reservation.sort",
+        "title": "%reservation.sort.title%",
+        "category": "jenkinssuite",
+        "icon": {
+          "light": "resources/light/sort.svg",
+          "dark": "resources/dark/sort.svg"
+        }
+      },
+      {
         "command": "utocode.snippets.refresh",
         "title": "%snippets.refresh.title%",
         "category": "jenkinssuite",
@@ -415,6 +461,11 @@
           "group": "2_configure@1"
         },
         {
+          "when": "viewItem == 'jobs' && viewItem != 'jobs_disabled'",
+          "command": "utocode.addReservation",
+          "group": "1_run@1"
+        },
+        {
           "when": "viewItem =~ /^jobs.*/",
           "command": "utocode.getConfigJob",
           "group": "1_jenkinssuite_actions@3"
@@ -443,6 +494,11 @@
           "when": "viewItem == 'builds'",
           "command": "utocode.withJobLog",
           "group": "1_jenkinssuite_actions@4"
+        },
+        {
+          "when": "viewItem == 'reservation'",
+          "command": "utocode.cancelReservation",
+          "group": "inline"
         },
         {
           "when": "viewItem == 'notify'",
@@ -492,6 +548,21 @@
           "group": "navigation@3"
         },
         {
+          "command": "utocode.builds.refresh",
+          "when": "view == utocode.views.builds",
+          "group": "navigation@3"
+        },
+        {
+          "command": "utocode.reservation.refresh",
+          "when": "view == utocode.views.reservation",
+          "group": "navigation@4"
+        },
+        {
+          "command": "utocode.reservation.sort",
+          "when": "view == utocode.views.reservation",
+          "group": "navigation@4"
+        },
+        {
           "command": "utocode.snippets.refresh",
           "when": "view == utocode.views.snippets",
           "group": "navigation@1"
@@ -506,6 +577,11 @@
           "type": "boolean",
           "default": true,
           "description": "%views.notify.enabled.description%"
+        },
+        "jenkinssuite.views.reservation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "%views.reservation.enabled.description%"
         },
         "jenkinssuite.views.snippet.enabled": {
           "type": "boolean",
