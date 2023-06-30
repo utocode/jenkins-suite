@@ -265,10 +265,10 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         if (element && element.jobParam && element.level === 100) {
             const jobParam = element.jobParam;
             treeItem = {
-                label: jobParam.name,
+                label: `${jobParam.name} [${jobParam.defaultParameterValue.value}]`,
                 collapsibleState: vscode.TreeItemCollapsibleState.None,
                 iconPath: new vscode.ThemeIcon('file-code'),
-                tooltip: this.getToolTip(element) // `Type: ${jobParam.type}\nDefault Value: ${jobParam.defaultParameterValue.value}`
+                tooltip: this.getToolTip(element)
             };
         } else {
             if (element._class === JobModelType.freeStyleProject || element._class === JobModelType.workflowJob) {
@@ -445,7 +445,7 @@ export class JobsProvider implements vscode.TreeDataProvider<JobsModel> {
         text.appendMarkdown('\n---\n');
 
         text.appendMarkdown(`### Parameter: \n`);
-        text.appendMarkdown(`* Type: _${jobParam.type}_\n`);
+        text.appendMarkdown(`* Type: _${jobParam.type.substring(0, jobParam.type.length - 'ParameterValue'.length)}_\n`);
         text.appendMarkdown(`* Default Value: *${jobParam.defaultParameterValue.value}*\n`);
         return text;
     }
